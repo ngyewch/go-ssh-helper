@@ -7,7 +7,9 @@ import (
 	"github.com/ngyewch/go-ssh-helper/common"
 	"golang.org/x/crypto/ssh"
 	"net"
+	"strconv"
 	"strings"
+	"time"
 )
 
 var (
@@ -28,7 +30,7 @@ func doNewSshClientForAlias(alias string) (*ssh.Client, error) {
 		aliasUser = alias[:p]
 		aliasHost = alias[p+1:]
 	}
-	hostname := userSettings.Get(aliasHost, "HostName")
+	hostname := userSettings.Get(aliasHost, "Hostname")
 	if hostname == "" {
 		return nil, fmt.Errorf("alias does not exist")
 	}
@@ -52,6 +54,15 @@ func doNewSshClientForAlias(alias string) (*ssh.Client, error) {
 	sshConfig.User = userSettings.Get(aliasHost, "User")
 	if aliasUser != "" {
 		sshConfig.User = aliasUser
+	}
+
+	sTimeoutInSeconds := userSettings.Get(aliasHost, "ConnectTimeout")
+	if sTimeoutInSeconds != "" {
+		timeoutInSeconds, err := strconv.Atoi(sTimeoutInSeconds)
+		if err != nil {
+			return nil, err
+		}
+		sshConfig.Timeout = time.Duration(timeoutInSeconds) * time.Second
 	}
 
 	identityFile := userSettings.Get(aliasHost, "IdentityFile")

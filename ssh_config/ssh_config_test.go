@@ -3,12 +3,13 @@ package ssh_config
 import (
 	"bytes"
 	"golang.org/x/crypto/ssh"
+	"os"
 	"strings"
 	"testing"
 )
 
 func Test1(t *testing.T) {
-	sshClient, err := NewSshClientForAlias("test")
+	sshClient, err := NewSshClientForAlias(os.Getenv("HOST"))
 	if err != nil {
 		t.Fatal(err)
 	}
