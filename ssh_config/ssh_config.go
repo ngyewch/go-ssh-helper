@@ -65,8 +65,8 @@ func doNewSshClientForAlias(alias string) (*ssh.Client, error) {
 		sshConfig.Timeout = time.Duration(timeoutInSeconds) * time.Second
 	}
 
-	identityFile := userSettings.Get(aliasHost, "IdentityFile")
-	if identityFile != "" {
+	identityFiles := userSettings.GetAll(aliasHost, "IdentityFile")
+	for _, identityFile := range identityFiles {
 		identityFile, err := homedir.Expand(identityFile)
 		if err != nil {
 			return nil, err
