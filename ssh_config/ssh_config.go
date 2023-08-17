@@ -21,8 +21,6 @@ func NewSshClientForAlias(alias string) (*ssh.Client, error) {
 }
 
 func doNewSshClientForAlias(alias string) (*ssh.Client, error) {
-	fmt.Printf("creating %s ...\n", alias)
-
 	aliasHost := alias
 	aliasUser := ""
 	if strings.Contains(alias, "@") {
