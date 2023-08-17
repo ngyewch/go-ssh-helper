@@ -3,9 +3,9 @@ package resources
 import "embed"
 
 var (
-	//go:embed dockerBuildContext
+	//go:embed test/dockerBuildContext
 	DockerBuildContextFS embed.FS
 
-	//go:embed ssh_config
+	//go:embed test/ssh_config
 	SshConfigFS embed.FS
 )
