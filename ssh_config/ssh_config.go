@@ -17,10 +17,10 @@ var (
 )
 
 func NewSshClientForAlias(alias string) (*ssh.Client, error) {
-	return doNewSshClientForAlias(alias)
+	return doNewSshClientForAlias(alias, nil)
 }
 
-func doNewSshClientForAlias(alias string) (*ssh.Client, error) {
+func doNewSshClientForAlias(alias string, baseClient *ssh.Client) (*ssh.Client, error) {
 	aliasHost := alias
 	aliasUser := ""
 	if strings.Contains(alias, "@") {
@@ -31,16 +31,6 @@ func doNewSshClientForAlias(alias string) (*ssh.Client, error) {
 	hostname := userSettings.Get(aliasHost, "Hostname")
 	if hostname == "" {
 		return nil, fmt.Errorf("alias does not exist")
-	}
-
-	var proxyClient *ssh.Client
-	proxyJump := userSettings.Get(aliasHost, "ProxyJump")
-	if proxyJump != "" {
-		newProxyClient, err := doNewSshClientForAlias(proxyJump)
-		if err != nil {
-			return nil, err
-		}
-		proxyClient = newProxyClient
 	}
 
 	port := userSettings.Get(aliasHost, "Port")
@@ -84,6 +74,25 @@ func doNewSshClientForAlias(alias string) (*ssh.Client, error) {
 		network = "tcp4"
 	case "inet6":
 		network = "tcp6"
+	}
+
+	var proxyJumps []string
+	if userSettings.Get(aliasHost, "ProxyJump") != "" {
+		proxyJumps = strings.Split(userSettings.Get(aliasHost, "ProxyJump"), ",")
+		for i := 0; i < len(proxyJumps); i++ {
+			proxyJumps[i] = strings.TrimSpace(proxyJumps[i])
+		}
+	}
+
+	proxyClient := baseClient
+	for _, proxyJump := range proxyJumps {
+		if proxyJump != "" {
+			newProxyClient, err := doNewSshClientForAlias(proxyJump, proxyClient)
+			if err != nil {
+				return nil, err
+			}
+			proxyClient = newProxyClient
+		}
 	}
 
 	if proxyClient != nil {
