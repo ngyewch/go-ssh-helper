@@ -42,6 +42,9 @@ func NewOpenSSHServerManager() (*OpenSSHServerManager, error) {
 
 	dockerBuildContextFs := os.DirFS(filepath.Join("resources", "dockerBuildContext"))
 	err = manager.BuildImage(customOpenSshServerRepoTag, dockerBuildContextFs)
+	if err != nil {
+		return nil, err
+	}
 
 	return manager, nil
 }
@@ -236,6 +239,9 @@ func createTar(tr *tar.Writer, filesystem fs.FS, vars any) error {
 				_ = f.Close()
 			}(f)
 			contentBytes, err := io.ReadAll(f)
+			if err != nil {
+				return err
+			}
 			t := time.Now()
 			err = tr.WriteHeader(&tar.Header{
 				Name:       path,
