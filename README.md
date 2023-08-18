@@ -1,5 +1,28 @@
 # go-ssh-helper
 
+## Usage
+
+### SSHClientFactory
+
+```
+package main
+
+import (
+    "fmt"
+
+	ssh_helper "github.com/ngyewch/go-ssh-helper"
+)
+
+func main() {
+    sshClientFactory := ssh_helper.DefaultSSHClientFactory()
+    sshClient, err := sshClientFactory.CreateForAlias("myhost")
+    if err != nil {
+        panic(err)
+    }
+    // ...
+}
+```
+
 ## Supported ssh_config keywords
 
 | Keyword                          | Supported |
