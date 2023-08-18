@@ -1,4 +1,4 @@
-package common
+package ssh_helper
 
 import (
 	"github.com/mitchellh/go-homedir"
@@ -6,6 +6,7 @@ import (
 	"os"
 )
 
+// LoadSignerFromFile instantiates an ssh.Signer from a file containing a private key.
 func LoadSignerFromFile(path string) (ssh.Signer, error) {
 	expandedPath, err := homedir.Expand(path)
 	if err != nil {

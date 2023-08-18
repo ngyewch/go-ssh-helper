@@ -1,10 +1,9 @@
-package ssh_config
+package ssh_helper
 
 import (
 	"fmt"
-	"github.com/kevinburke/ssh_config"
 	"github.com/mitchellh/go-homedir"
-	"github.com/ngyewch/go-ssh-helper/common"
+	"github.com/trzsz/ssh_config"
 	"golang.org/x/crypto/ssh"
 	"net"
 	"strconv"
@@ -13,14 +12,32 @@ import (
 )
 
 var (
-	userSettings = ssh_config.UserSettings{}
+	defaultSshClientFactory = NewSSHClientFactory(&ssh_config.UserSettings{})
 )
 
-func NewSshClientForAlias(alias string) (*ssh.Client, error) {
-	return doNewSshClientForAlias(alias, nil)
+// SSHClientFactory is a factory for creating ssh.Client.
+type SSHClientFactory struct {
+	userSettings *ssh_config.UserSettings
 }
 
-func doNewSshClientForAlias(alias string, baseClient *ssh.Client) (*ssh.Client, error) {
+// NewSSHClientFactory instantiates a new SSHClientFactory.
+func NewSSHClientFactory(userSettings *ssh_config.UserSettings) *SSHClientFactory {
+	return &SSHClientFactory{
+		userSettings: userSettings,
+	}
+}
+
+// DefaultSSHClientFactory returns the default SSHClientFactory
+func DefaultSSHClientFactory() *SSHClientFactory {
+	return defaultSshClientFactory
+}
+
+// CreateForAlias creates a new ssh.Client for the specified alias.
+func (factory *SSHClientFactory) CreateForAlias(alias string) (*ssh.Client, error) {
+	return factory.doCreateForAlias(alias, nil)
+}
+
+func (factory *SSHClientFactory) doCreateForAlias(alias string, baseClient *ssh.Client) (*ssh.Client, error) {
 	aliasHost := alias
 	aliasUser := ""
 	if strings.Contains(alias, "@") {
@@ -28,23 +45,23 @@ func doNewSshClientForAlias(alias string, baseClient *ssh.Client) (*ssh.Client, 
 		aliasUser = alias[:p]
 		aliasHost = alias[p+1:]
 	}
-	hostname := userSettings.Get(aliasHost, "Hostname")
+	hostname := factory.userSettings.Get(aliasHost, "Hostname")
 	if hostname == "" {
 		return nil, fmt.Errorf("alias does not exist")
 	}
 
-	port := userSettings.Get(aliasHost, "Port")
+	port := factory.userSettings.Get(aliasHost, "Port")
 
 	sshConfig := &ssh.ClientConfig{
 		HostKeyCallback: ssh.InsecureIgnoreHostKey(),
 	}
 
-	sshConfig.User = userSettings.Get(aliasHost, "User")
+	sshConfig.User = factory.userSettings.Get(aliasHost, "User")
 	if aliasUser != "" {
 		sshConfig.User = aliasUser
 	}
 
-	sTimeoutInSeconds := userSettings.Get(aliasHost, "ConnectTimeout")
+	sTimeoutInSeconds := factory.userSettings.Get(aliasHost, "ConnectTimeout")
 	if sTimeoutInSeconds != "" {
 		timeoutInSeconds, err := strconv.Atoi(sTimeoutInSeconds)
 		if err != nil {
@@ -53,13 +70,13 @@ func doNewSshClientForAlias(alias string, baseClient *ssh.Client) (*ssh.Client, 
 		sshConfig.Timeout = time.Duration(timeoutInSeconds) * time.Second
 	}
 
-	identityFiles := userSettings.GetAll(aliasHost, "IdentityFile")
+	identityFiles := factory.userSettings.GetAll(aliasHost, "IdentityFile")
 	for _, identityFile := range identityFiles {
 		identityFile, err := homedir.Expand(identityFile)
 		if err != nil {
 			return nil, err
 		}
-		signer, err := common.LoadSignerFromFile(identityFile)
+		signer, err := LoadSignerFromFile(identityFile)
 		if err != nil {
 			return nil, err
 		}
@@ -67,7 +84,7 @@ func doNewSshClientForAlias(alias string, baseClient *ssh.Client) (*ssh.Client, 
 	}
 
 	network := "tcp"
-	switch userSettings.Get(aliasHost, "AddressFamily") {
+	switch factory.userSettings.Get(aliasHost, "AddressFamily") {
 	case "any":
 		network = "tcp"
 	case "inet":
@@ -77,8 +94,8 @@ func doNewSshClientForAlias(alias string, baseClient *ssh.Client) (*ssh.Client, 
 	}
 
 	var proxyJumps []string
-	if userSettings.Get(aliasHost, "ProxyJump") != "" {
-		proxyJumps = strings.Split(userSettings.Get(aliasHost, "ProxyJump"), ",")
+	if factory.userSettings.Get(aliasHost, "ProxyJump") != "" {
+		proxyJumps = strings.Split(factory.userSettings.Get(aliasHost, "ProxyJump"), ",")
 		for i := 0; i < len(proxyJumps); i++ {
 			proxyJumps[i] = strings.TrimSpace(proxyJumps[i])
 		}
@@ -87,7 +104,7 @@ func doNewSshClientForAlias(alias string, baseClient *ssh.Client) (*ssh.Client, 
 	proxyClient := baseClient
 	for _, proxyJump := range proxyJumps {
 		if proxyJump != "" {
-			newProxyClient, err := doNewSshClientForAlias(proxyJump, proxyClient)
+			newProxyClient, err := factory.doCreateForAlias(proxyJump, proxyClient)
 			if err != nil {
 				return nil, err
 			}

@@ -4,10 +4,11 @@ go 1.21
 
 require (
 	github.com/fsouza/go-dockerclient v1.9.8
-	github.com/google/uuid v1.2.0
-	github.com/kevinburke/ssh_config v1.2.0
+	github.com/google/uuid v1.3.0
 	github.com/mitchellh/go-homedir v1.1.0
+	github.com/trzsz/ssh_config v1.3.1
 	golang.org/x/crypto v0.12.0
+	gotest.tools/v3 v3.5.0
 )
 
 require (
@@ -18,6 +19,7 @@ require (
 	github.com/docker/go-connections v0.4.0 // indirect
 	github.com/docker/go-units v0.5.0 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
+	github.com/google/go-cmp v0.5.9 // indirect
 	github.com/klauspost/compress v1.11.13 // indirect
 	github.com/moby/patternmatcher v0.5.0 // indirect
 	github.com/moby/sys/sequential v0.5.0 // indirect
