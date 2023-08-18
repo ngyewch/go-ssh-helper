@@ -5,7 +5,6 @@ import (
 	"bytes"
 	"fmt"
 	docker "github.com/fsouza/go-dockerclient"
-	testResources "github.com/ngyewch/go-ssh-helper/test/resources"
 	"io"
 	"io/fs"
 	"os"
@@ -41,10 +40,7 @@ func NewOpenSSHServerManager() (*OpenSSHServerManager, error) {
 		return nil, err
 	}
 
-	dockerBuildContextFs, err := fs.Sub(testResources.DockerBuildContextFS, "dockerBuildContext")
-	if err != nil {
-		return nil, err
-	}
+	dockerBuildContextFs := os.DirFS(filepath.Join("resources", "dockerBuildContext"))
 	err = manager.BuildImage(customOpenSshServerRepoTag, dockerBuildContextFs)
 
 	return manager, nil

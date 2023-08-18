@@ -5,8 +5,9 @@ import (
 	"github.com/google/uuid"
 	"github.com/mitchellh/go-homedir"
 	"github.com/ngyewch/go-ssh-helper"
-	testResources "github.com/ngyewch/go-ssh-helper/test/resources"
 	"github.com/trzsz/ssh_config"
+	"io"
+	"io/fs"
 	"os"
 	"path/filepath"
 )
@@ -27,17 +28,32 @@ func NewTestEnv() (*TestEnv, error) {
 		}
 		test.tmpDir = tmpDir
 
-		sshConfigBytes, err := testResources.SshConfigFS.ReadFile("ssh_config/test")
-		if err != nil {
-			return nil, err
-		}
-
 		sshConfigPath := filepath.Join(tmpDir, "test")
+		err = func() error {
+			testResourceFs := os.DirFS(filepath.Join("resources", "ssh_config"))
+			r, err := testResourceFs.Open("test")
+			if err != nil {
+				return err
+			}
+			defer func(r fs.File) {
+				_ = r.Close()
+			}(r)
 
-		err = os.WriteFile(sshConfigPath, sshConfigBytes, 0600)
-		if err != nil {
-			return nil, err
-		}
+			w, err := os.Create(sshConfigPath)
+			if err != nil {
+				return err
+			}
+			defer func(w *os.File) {
+				_ = w.Close()
+			}(w)
+
+			_, err = io.Copy(w, r)
+			if err != nil {
+				return err
+			}
+
+			return nil
+		}()
 
 		userSettings := &ssh_config.UserSettings{}
 		userSettings.ConfigFinder(func() string {
