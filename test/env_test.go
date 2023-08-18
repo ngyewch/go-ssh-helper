@@ -54,6 +54,9 @@ func NewTestEnv() (*TestEnv, error) {
 
 			return nil
 		}()
+		if err != nil {
+			return nil, err
+		}
 
 		userSettings := &ssh_config.UserSettings{}
 		userSettings.ConfigFinder(func() string {
@@ -90,6 +93,9 @@ func (test *TestEnv) Setup() error {
 		}
 		return string(publicKeyBytes), nil
 	}()
+	if err != nil {
+		return err
+	}
 
 	network1, err := test.openSshServerManager.CreateNetwork(fmt.Sprintf("network1_%s", id))
 	if err != nil {
