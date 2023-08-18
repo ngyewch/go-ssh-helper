@@ -5,7 +5,7 @@
 | Keyword                          | Supported |
 |----------------------------------|-----------|
 | Host                             | Yes       |
-| Match                            | Yes       |
+| Match                            | No        |
 | AddKeysToAgent                   | No        |
 | AddressFamily                    | Yes       |
 | BatchMode                        |           |
