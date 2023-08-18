@@ -10,7 +10,7 @@ package main
 import (
     "fmt"
 
-	ssh_helper "github.com/ngyewch/go-ssh-helper"
+    ssh_helper "github.com/ngyewch/go-ssh-helper"
 )
 
 func main() {
