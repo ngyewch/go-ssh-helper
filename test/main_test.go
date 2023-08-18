@@ -23,7 +23,7 @@ func TestMain(m *testing.M) {
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt)
 	go func() {
-		for _ = range c {
+		for range c {
 			fmt.Println()
 			fmt.Println("Interrupted by user")
 			_ = testEnv.Close()
