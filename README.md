@@ -1,3 +1,7 @@
+![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/ngyewch/go-ssh-helper/build.yml)
+![GitHub tag (with filter)](https://img.shields.io/github/v/tag/ngyewch/go-ssh-helper)
+[![Go Reference](https://pkg.go.dev/badge/github.com/ngyewch/go-pqssh.svg)](https://pkg.go.dev/github.com/ngyewch/go-ssh-helper)
+
 # go-ssh-helper
 
 ## Usage
