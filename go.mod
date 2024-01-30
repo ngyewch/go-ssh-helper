@@ -4,7 +4,7 @@ go 1.21
 
 require (
 	github.com/fsouza/go-dockerclient v1.10.1
-	github.com/google/uuid v1.5.0
+	github.com/google/uuid v1.6.0
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/trzsz/ssh_config v1.3.4
 	golang.org/x/crypto v0.18.0
