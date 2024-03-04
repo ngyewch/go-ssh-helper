@@ -7,7 +7,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/trzsz/ssh_config v1.3.4
-	golang.org/x/crypto v0.19.0
+	golang.org/x/crypto v0.20.0
 	gotest.tools/v3 v3.5.1
 )
 
