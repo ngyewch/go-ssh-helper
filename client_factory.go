@@ -102,12 +102,17 @@ func (factory *SSHClientFactory) doCreateForAlias(alias string, baseClient *ssh.
 	}
 
 	proxyClient := baseClient
+	var proxyClients []*ssh.Client
 	for _, proxyJump := range proxyJumps {
 		if proxyJump != "" {
 			newProxyClient, err := factory.doCreateForAlias(proxyJump, proxyClient)
 			if err != nil {
+				for _, proxyClient1 := range proxyClients {
+					_ = proxyClient1.Close()
+				}
 				return nil, err
 			}
+			proxyClients = append(proxyClients, newProxyClient)
 			proxyClient = newProxyClient
 		}
 	}
@@ -124,6 +129,12 @@ func (factory *SSHClientFactory) doCreateForAlias(alias string, baseClient *ssh.
 		}
 
 		client := ssh.NewClient(ncc, chans, reqs)
+		go func() {
+			_ = client.Wait()
+			for _, proxyClient1 := range proxyClients {
+				_ = proxyClient1.Close()
+			}
+		}()
 		return client, nil
 	} else {
 		client, err := ssh.Dial(network, net.JoinHostPort(hostname, port), sshConfig)
