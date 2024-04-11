@@ -7,7 +7,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/trzsz/ssh_config v1.3.5
-	golang.org/x/crypto v0.21.0
+	golang.org/x/crypto v0.22.0
 	gotest.tools/v3 v3.5.1
 )
 
@@ -32,6 +32,6 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/sirupsen/logrus v1.9.3 // indirect
 	golang.org/x/mod v0.8.0 // indirect
-	golang.org/x/sys v0.18.0 // indirect
+	golang.org/x/sys v0.19.0 // indirect
 	golang.org/x/tools v0.6.0 // indirect
 )
