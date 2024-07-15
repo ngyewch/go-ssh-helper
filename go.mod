@@ -6,8 +6,8 @@ require (
 	github.com/fsouza/go-dockerclient v1.11.0
 	github.com/google/uuid v1.6.0
 	github.com/mitchellh/go-homedir v1.1.0
-	github.com/trzsz/ssh_config v1.3.5
-	golang.org/x/crypto v0.22.0
+	github.com/trzsz/ssh_config v1.3.6
+	golang.org/x/crypto v0.25.0
 	gotest.tools/v3 v3.5.1
 )
 
@@ -21,6 +21,7 @@ require (
 	github.com/docker/go-units v0.5.0 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
+	github.com/google/shlex v0.0.0-20191202100458-e7afc7fbc510 // indirect
 	github.com/klauspost/compress v1.15.9 // indirect
 	github.com/moby/docker-image-spec v1.3.1 // indirect
 	github.com/moby/patternmatcher v0.6.0 // indirect
@@ -33,6 +34,6 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/sirupsen/logrus v1.9.3 // indirect
 	golang.org/x/mod v0.8.0 // indirect
-	golang.org/x/sys v0.19.0 // indirect
+	golang.org/x/sys v0.22.0 // indirect
 	golang.org/x/tools v0.6.0 // indirect
 )
