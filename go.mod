@@ -1,6 +1,6 @@
 module github.com/ngyewch/go-ssh-helper
 
-go 1.23
+go 1.22
 
 require (
 	github.com/fsouza/go-dockerclient v1.12.0
