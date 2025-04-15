@@ -2,8 +2,6 @@ module github.com/ngyewch/go-ssh-helper
 
 go 1.23.0
 
-toolchain go1.24.2
-
 require (
 	github.com/fsouza/go-dockerclient v1.12.1
 	github.com/google/uuid v1.6.0
