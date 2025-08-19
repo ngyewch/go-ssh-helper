@@ -3,6 +3,7 @@ module github.com/ngyewch/go-ssh-helper
 go 1.23.0
 
 require (
+	github.com/charmbracelet/keygen v0.5.3
 	github.com/fsouza/go-dockerclient v1.12.1
 	github.com/google/uuid v1.6.0
 	github.com/mitchellh/go-homedir v1.1.0

@@ -2,25 +2,25 @@ Host test-hostA
     Hostname     localhost
     Port         2222
     User         userA
-    IdentityFile ~/.ssh/id_rsa
+    IdentityFile {{ .IdentityFile }}
 
 Host test-hostB
     Hostname     hostB
     Port         2222
     User         userB
-    IdentityFile ~/.ssh/id_rsa
+    IdentityFile {{ .IdentityFile }}
     ProxyJump    test-hostA
 
 Host test-hostC
     Hostname     hostC
     Port         2222
     User         userC
-    IdentityFile ~/.ssh/id_rsa
+    IdentityFile {{ .IdentityFile }}
     ProxyJump    test-hostB
 
 Host test-hostC-2
     Hostname     hostC
     Port         2222
     User         userC
-    IdentityFile ~/.ssh/id_rsa
+    IdentityFile {{ .IdentityFile }}
     ProxyJump    test-hostA,test-hostB

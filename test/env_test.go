@@ -1,16 +1,22 @@
 package test
 
 import (
+	"embed"
 	"fmt"
-	"io"
-	"io/fs"
 	"os"
 	"path/filepath"
+	"text/template"
 
+	"github.com/charmbracelet/keygen"
 	"github.com/google/uuid"
 	"github.com/mitchellh/go-homedir"
 	"github.com/ngyewch/go-ssh-helper"
 	"github.com/trzsz/ssh_config"
+)
+
+var (
+	//go:embed resources/ssh_config
+	testResourceFs embed.FS
 )
 
 type TestEnv struct {
@@ -29,16 +35,32 @@ func NewTestEnv() (*TestEnv, error) {
 		}
 		test.tmpDir = tmpDir
 
+		fmt.Println("*************** tmpDir", test.tmpDir)
+
+		kp, err := keygen.New(filepath.Join(tmpDir, "identity"))
+		if err != nil {
+			return nil, err
+		}
+		err = kp.WriteKeys()
+		if err != nil {
+			return nil, err
+		}
+
 		sshConfigPath := filepath.Join(tmpDir, "test")
 		err = func() error {
-			testResourceFs := os.DirFS(filepath.Join("resources", "ssh_config"))
-			r, err := testResourceFs.Open("test")
+			type TemplateData struct {
+				IdentityFile string
+			}
+
+			templates, err := template.ParseFS(testResourceFs, "resources/ssh_config/*.tmpl")
 			if err != nil {
 				return err
 			}
-			defer func(r fs.File) {
-				_ = r.Close()
-			}(r)
+
+			t := templates.Lookup("test.tmpl")
+			templateData := TemplateData{
+				IdentityFile: filepath.Join(tmpDir, "identity"),
+			}
 
 			w, err := os.Create(sshConfigPath)
 			if err != nil {
@@ -48,7 +70,7 @@ func NewTestEnv() (*TestEnv, error) {
 				_ = w.Close()
 			}(w)
 
-			_, err = io.Copy(w, r)
+			err = t.Execute(w, templateData)
 			if err != nil {
 				return err
 			}
@@ -78,14 +100,13 @@ func NewTestEnv() (*TestEnv, error) {
 }
 
 func (test *TestEnv) Setup() error {
-
 	id, err := uuid.NewUUID()
 	if err != nil {
 		return err
 	}
 
 	publicKey, err := func() (string, error) {
-		publicKeyFile, err := homedir.Expand("~/.ssh/id_rsa.pub")
+		publicKeyFile, err := homedir.Expand(filepath.Join(test.tmpDir, "identity.pub"))
 		if err != nil {
 			return "", err
 		}
