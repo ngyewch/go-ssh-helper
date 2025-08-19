@@ -1,9 +1,10 @@
 package ssh_helper
 
 import (
+	"os"
+
 	"github.com/mitchellh/go-homedir"
 	"golang.org/x/crypto/ssh"
-	"os"
 )
 
 // LoadSignerFromFile instantiates an ssh.Signer from a file containing a private key.

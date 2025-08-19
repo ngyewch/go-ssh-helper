@@ -2,14 +2,15 @@ package test
 
 import (
 	"fmt"
-	"github.com/google/uuid"
-	"github.com/mitchellh/go-homedir"
-	"github.com/ngyewch/go-ssh-helper"
-	"github.com/trzsz/ssh_config"
 	"io"
 	"io/fs"
 	"os"
 	"path/filepath"
+
+	"github.com/google/uuid"
+	"github.com/mitchellh/go-homedir"
+	"github.com/ngyewch/go-ssh-helper"
+	"github.com/trzsz/ssh_config"
 )
 
 type TestEnv struct {
@@ -77,6 +78,7 @@ func NewTestEnv() (*TestEnv, error) {
 }
 
 func (test *TestEnv) Setup() error {
+
 	id, err := uuid.NewUUID()
 	if err != nil {
 		return err

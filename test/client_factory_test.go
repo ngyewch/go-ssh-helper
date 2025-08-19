@@ -2,12 +2,13 @@ package test
 
 import (
 	"bytes"
-	"golang.org/x/crypto/ssh"
-	"gotest.tools/v3/assert"
 	"io"
 	"os"
 	"strings"
 	"testing"
+
+	"golang.org/x/crypto/ssh"
+	"gotest.tools/v3/assert"
 )
 
 func TestHostA(t *testing.T) {

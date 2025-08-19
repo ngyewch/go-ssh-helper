@@ -4,7 +4,6 @@ import (
 	"archive/tar"
 	"bytes"
 	"fmt"
-	docker "github.com/fsouza/go-dockerclient"
 	"io"
 	"io/fs"
 	"os"
@@ -12,6 +11,8 @@ import (
 	"strings"
 	"text/template"
 	"time"
+
+	docker "github.com/fsouza/go-dockerclient"
 )
 
 const (
