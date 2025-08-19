@@ -2,13 +2,14 @@ package ssh_helper
 
 import (
 	"fmt"
-	"github.com/mitchellh/go-homedir"
-	"github.com/trzsz/ssh_config"
-	"golang.org/x/crypto/ssh"
 	"net"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/mitchellh/go-homedir"
+	"github.com/trzsz/ssh_config"
+	"golang.org/x/crypto/ssh"
 )
 
 var (
