@@ -1,5 +1,5 @@
 [tools]
-go = '1.27.0'
+go = '1.27.1'
 task = '3.53.1'
 act = '0.2.89'
 'github:psampaz/go-mod-outdated' = '0.9.0'
