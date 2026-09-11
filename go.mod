@@ -1,6 +1,6 @@
 module github.com/ngyewch/go-ssh-helper
 
-go 1.26
+go 1.26.0
 
 require (
 	github.com/charmbracelet/keygen v0.5.4
@@ -8,7 +8,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/trzsz/ssh_config v1.3.8
-	golang.org/x/crypto v0.55.0
+	golang.org/x/crypto v0.57.0
 	gotest.tools/v3 v3.5.2
 )
 
@@ -31,5 +31,5 @@ require (
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.1.1 // indirect
 	github.com/sirupsen/logrus v1.9.4 // indirect
-	golang.org/x/sys v0.47.0 // indirect
+	golang.org/x/sys v0.48.0 // indirect
 )
